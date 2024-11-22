@@ -13,7 +13,6 @@ class Jogo:
         pygame.display.set_caption('Layers of Discrete Mathematics')
 
         # Carrega os recursos
-        self.background = pygame.image.load(os.path.join('assets', 'background_inicio.png'))
         self.black = (0, 0, 0)
         self.white = (255, 255, 255)
         self.red = (255, 0, 0)
@@ -90,7 +89,7 @@ class Jogo:
             y += y_change
 
             # Desenha o mapa
-            Maps = Mapa()
+            Maps = Mapa(self.gameDisplay)
             Maps.mapa1()
 
             # Desenha o calouro
