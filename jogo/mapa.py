@@ -12,3 +12,9 @@ class Mapa:
         self.background = pygame.image.load(os.path.join('assets', 'background_inicio.png'))
         self.gameDisplay.blit(self.background, (0, 0))  # Posiciona o fundo no canto superior esquerdo
         pygame.display.update()  
+    def mapa2(self):
+        pygame.init()
+				
+        self.gameDisplay.fill(self.white)
+
+        pygame.display.update()  

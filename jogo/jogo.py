@@ -12,6 +12,7 @@ class Jogo:
         self.gameDisplay = pygame.display.set_mode((self.display_width, self.display_height))
         pygame.display.set_caption('Layers of Discrete Mathematics')
 
+
         # Carrega os recursos
         self.black = (0, 0, 0)
         self.white = (255, 255, 255)
@@ -39,7 +40,7 @@ class Jogo:
         pygame.display.update()
         pygame.time.wait(2000)
 
-    def warninglimit(self):
+    def warninglimitMapa1(self):
         self.message_display('Esse não é o caminho para o CTC')
 
     def warningru(self):
@@ -50,21 +51,28 @@ class Jogo:
 
         def calouro(x, y):
             self.gameDisplay.blit(self.calouroImg, (x, y))
-
+    
         x = 0
         y = 0
         x_change = 0
         y_change = 0
-        font = pygame.font.SysFont("Arial", 25)
-
+    
+        self.current_map = 1  # Inicializa no mapa 1
+        Maps = Mapa(self.gameDisplay)
+        
         while not GameExit:
-            # Preenche a tela com o fundo branco
+            # Preenche a tela com branco
             self.gameDisplay.fill(self.white)
-
-            # Renderiza o texto de coordenadas
-            coords_text = font.render(f"Coordenadas: ({x}, {y})", True, self.red)
-            self.gameDisplay.blit(coords_text, (10, 10))
-
+			
+            # Renderiza o mapa atual
+            if self.current_map == 1:
+                Maps.mapa1()
+            elif self.current_map == 2:
+                Maps.mapa2()
+    
+            # Desenha o calouro
+            calouro(x, y)
+    
             # Processa eventos
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -83,39 +91,40 @@ class Jogo:
                         x_change = 0
                     elif event.key in [pygame.K_UP, pygame.K_DOWN]:
                         y_change = 0
-
+    
             # Atualiza as coordenadas
             x += x_change
             y += y_change
-
-            # Desenha o mapa
-            Maps = Mapa(self.gameDisplay)
-            Maps.mapa1()
-
-            # Desenha o calouro
-            calouro(x, y)
-
-            # Verifica limites da tela
-            if x < 0:
-                x = 0
-                self.warninglimit()
-            if x > self.display_width - self.calouro_width:
-                x = self.display_width - self.calouro_width
-                self.warninglimit()
-            if y < 0:
-                y = 0
-                self.warninglimit()
-            if y > self.display_height - self.calouro_height:
-                y = self.display_height - self.calouro_height
-                self.warninglimit()
-
-            # Verifica coordenadas específicas
-            if 680 <= x <= 700 and 140 <= y <= 160:
-                self.warningru()
-
+    
+            # Verifica transições de mapa
+            if self.current_map == 1:
+                if 350 <= x <= 400 and 555 <= y <= 600:
+                        self.current_map = 2  # Troca para o mapa 2
+                        x, y = 0, 0  # Reinicia a posição
+                elif 670 <= x <= 720 and 60 <= y <= 140:
+                    self.warningru()
+                elif x < 0:
+                    x = 0
+                    self.warninglimitMapa1()
+                elif x > self.display_width - self.calouro_width:
+                    x = self.display_width - self.calouro_width
+                    self.warninglimitMapa1()
+                elif y < 0:
+                    y = 0
+                    self.warninglimitMapa1()
+                elif y > self.display_height - self.calouro_height:
+                    y = self.display_height - self.calouro_height
+                    self.warninglimitMapa1()
+    
+                    
+    
+            elif self.current_map == 2:
+                # Adicione condições específicas para o mapa 2, se necessário
+                pass
+    
             # Atualiza o display e controla o FPS
             pygame.display.update()
             self.clock.tick(60)
-
+    
         pygame.quit()
         quit()
