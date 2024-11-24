@@ -25,12 +25,12 @@ class Jogo:
 
         self.calouroImg = pygame.image.load(os.path.join('assets', 'calouro.png'))
         self.calouroImg = pygame.transform.scale(self.calouroImg, (40, 40))
-
+    
     def text_objects(self, text, font):
         """Função auxiliar para renderizar texto."""
         textSurface = font.render(text, True, self.black)
         return textSurface, textSurface.get_rect()
-
+    
     def message_display(self, text):
         """Exibe uma mensagem temporária na tela."""
         largeText = pygame.font.Font('freesansbold.ttf', 25)
@@ -62,8 +62,8 @@ class Jogo:
         
         while not GameExit:
             # Preenche a tela com branco
-            self.gameDisplay.fill(self.white)
-			
+            #self.gameDisplay.fill(self.white)
+            
             # Renderiza o mapa atual
             if self.current_map == 1:
                 Maps.mapa1()
@@ -71,8 +71,7 @@ class Jogo:
                 Maps.mapa2()
     
             # Desenha o calouro
-            calouro(x, y)
-    
+            
             # Processa eventos
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -121,7 +120,8 @@ class Jogo:
             elif self.current_map == 2:
                 # Adicione condições específicas para o mapa 2, se necessário
                 pass
-    
+            
+            calouro(x, y)
             # Atualiza o display e controla o FPS
             pygame.display.update()
             self.clock.tick(60)
