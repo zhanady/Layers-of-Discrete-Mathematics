@@ -5,16 +5,34 @@ class Mapa:
     def __init__(self, gameDisplay):
         """Recebe a superfície principal onde os elementos serão desenhados."""
         self.gameDisplay = gameDisplay
-        self.background = pygame.image.load(os.path.join('assets', 'background_inicio.png'))
+        self.background = None
+
     def mapa1(self):
-        pygame.init()
-				
+        """Desenha apenas o fundo do mapa 1."""
         self.background = pygame.image.load(os.path.join('assets', 'background_inicio.png'))
-        self.gameDisplay.blit(self.background, (0, 0))  # Posiciona o fundo no canto superior esquerdo
-        pygame.display.update()  
+        self.gameDisplay.blit(self.background, (0, 0))
+
     def mapa2(self):
-        pygame.init()
-				
-        self.background = pygame.image.load(os.path.join('assets', 'background_inicio.png'))
-        self.gameDisplay.blit(self.background, (0, 0))  # Posiciona o fundo no canto superior esquerdo
-        #pygame.display.update()  
+        """Desenha apenas o fundo do mapa 2."""
+        self.background = pygame.image.load(os.path.join('assets', 'saladeaula.png'))
+        self.gameDisplay.blit(self.background, (0, 0))
+    def mapa3_conjuntos(self):
+        """Desenha apenas o fundo do mapa 2."""
+        self.background = pygame.image.load(os.path.join('assets', 'conjuntosright.png'))
+        self.gameDisplay.blit(self.background, (0, 0))
+    def mapa4_sequencias(self):
+        """Desenha apenas o fundo do mapa 2."""
+        self.background = pygame.image.load(os.path.join('assets', 'sequencias.png'))
+        self.gameDisplay.blit(self.background, (0, 0))
+    def mapa5_logica(self):
+        """Desenha apenas o fundo do mapa 2."""
+        self.background = pygame.image.load(os.path.join('assets', 'logica.png'))
+        self.gameDisplay.blit(self.background, (0, 0))
+    def mapa6_inducao(self):
+        """Desenha apenas o fundo do mapa 2."""
+        self.background = pygame.image.load(os.path.join('assets', 'inducao.png'))
+        self.gameDisplay.blit(self.background, (0, 0))
+    def gameover(self):
+        """Desenha apenas o fundo do mapa 2."""
+        self.background = pygame.image.load(os.path.join('assets', 'gameoverset.png'))
+        self.gameDisplay.blit(self.background, (0, 0))
