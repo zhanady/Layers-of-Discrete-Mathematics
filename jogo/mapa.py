@@ -36,3 +36,37 @@ class Mapa:
         """Desenha apenas o fundo do mapa 2."""
         self.background = pygame.image.load(os.path.join('assets', 'gameoverset.png'))
         self.gameDisplay.blit(self.background, (0, 0))
+    def intro(self):
+        """Desenha apenas o fundo do mapa 2."""
+
+        
+        self.gameDisplay.blit(self.background, (0, 0))
+
+'''
+    def textoSalaInicio(self):
+        """Desenha apenas o fundo do mapa 2."""
+
+        self.background = pygame.image.load(os.path.join('assets', 'gameoverset.png'))
+        self.gameDisplay.blit(self.background, (0, 0))
+
+    def textoSalaFim(self):
+        """Desenha apenas o fundo do mapa 2."""
+
+        self.background = pygame.image.load(os.path.join('assets', 'gameoverset.png'))
+        self.gameDisplay.blit(self.background, (0, 0))
+        
+    def Pergunta1(self):
+        """Desenha apenas o fundo do mapa 2."""
+        
+        self.background = pygame.image.load(os.path.join('assets', 'gameoverset.png'))
+        self.gameDisplay.blit(self.background, (0, 0))
+    def Pergunta2(self):
+        self.background = pygame.image.load(os.path.join('assets', 'gameoverset.png'))
+        self.gameDisplay.blit(self.background, (0, 0))
+    def Pergunta3(self):
+        self.background = pygame.image.load(os.path.join('assets', 'gameoverset.png'))
+        self.gameDisplay.blit(self.background, (0, 0))
+    def Pergunta4(self):
+        self.background = pygame.image.load(os.path.join('assets', 'gameoverset.png'))
+        self.gameDisplay.blit(self.background, (0, 0))
+'''
