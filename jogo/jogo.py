@@ -7,9 +7,7 @@ class Jogo:
         pygame.init()
         self.start_time = pygame.time.get_ticks()
         self.clock = pygame.time.Clock()
-
-
-
+        
         # Configurações da tela
         self.display_width = 800
         self.display_height = 600
@@ -31,8 +29,11 @@ class Jogo:
         self.calouroImg_costas = pygame.transform.scale(self.calouroImg_costas, (200, 250))
         self.intro1 = pygame.image.load(os.path.join('assets', 'intro1.png'))
         self.intro2 = pygame.image.load(os.path.join('assets', 'intro2.png'))
-        self.aulasono = pygame.image.load(os.path.join('assets', 'aulasono.png'))
+        #self.aulasono = pygame.image.load(os.path.join('assets', 'aulasono.png'))
         self.conjuntos = pygame.image.load(os.path.join('assets', 'pergunta1.png'))
+        self.logica = pygame.image.load(os.path.join('assets', 'pergunta2.png'))
+        self.pergunta3 = pygame.image.load(os.path.join('assets', 'pergunta3.png'))
+        self.pergunta4 = pygame.image.load(os.path.join('assets', 'pergunta4.png'))
 
     def mostrar_coordenadas(self, display, x, y):
         """Exibe as coordenadas do personagem na tela."""
@@ -45,14 +46,22 @@ class Jogo:
         textSurface = font.render(text, True, self.black)
         return textSurface, textSurface.get_rect()
 
-    def message_display(self, text):
-        """Exibe uma mensagem temporária na tela."""
-        largeText = pygame.font.Font('freesansbold.ttf', 25)
+    def message_display(self, text, x=400, y=300, font=20):  # Valores padrão
+        largeText = pygame.font.Font('freesansbold.ttf', font)
         TextSurf, TextRect = self.text_objects(text, largeText)
-        TextRect.center = (self.display_width / 2, self.display_height / 2)
+        TextRect.center = (x, y)  # Usa os parâmetros passados ou valores padrão
         self.gameDisplay.blit(TextSurf, TextRect)
-        pygame.display.update()
-        pygame.time.wait(2000)
+        #pygame.display.update()
+    def message_display_white(self, text, x=400, y=300, font=20):  # Valores padrão
+        largeText = pygame.font.Font('freesansbold.ttf', font)
+        TextSurf, TextRect = self.text_objects_white(text, largeText)
+        TextRect.center = (x, y)  # Usa os parâmetros passados ou valores padrão
+        self.gameDisplay.blit(TextSurf, TextRect)
+        #pygame.display.update()
+    def text_objects_white(self, text, font):
+        """Função auxiliar para renderizar texto."""
+        textSurface = font.render(text, True, self.white)
+        return textSurface, textSurface.get_rect()
 
     def warninglimitMapa1(self):
         self.message_display('Esse não é o caminho para o CTC')
@@ -62,6 +71,7 @@ class Jogo:
 
     def openGame(self):
         GameExit = False
+        #calouroImg = self.calouroImg_frente
 
         def calouro(x, y, image):
             self.gameDisplay.blit(image, (x, y))
@@ -74,6 +84,11 @@ class Jogo:
 
         map2_start_time = None  # Inicializa a variável para controlar o tempo do mapa 2
         map3_start_time = None
+        map4_start_time = None
+        map5_start_time = None
+        map6_start_time = None
+        map7_start_time = None
+
         while not GameExit:
             # Calcula o tempo total decorrido
             self.elapsed_time = (pygame.time.get_ticks() - self.start_time) / 1000
@@ -90,20 +105,25 @@ class Jogo:
 
             elif self.current_map == 2:
                 if map2_start_time is None:
-                    map2_start_time = pygame.time.get_ticks()  # Define o início do mapa 2
 
-                # Calcula o tempo decorrido no mapa 2
+                    map2_start_time = pygame.time.get_ticks()  # Define o início do mapa 2
+                Maps.mapa2()
+
+                    # Calcula o tempo decorrido no mapa 2
                 map2_elapsed_time = (pygame.time.get_ticks() - map2_start_time) / 1000
 
-                if map2_elapsed_time < 5:
-                    # Exibe a imagem por 8 segundos no mapa 2
-                    Maps.mapa2()
-                    self.gameDisplay.blit(self.aulasono, (250, 0))
-                    self.aulasono = pygame.transform.scale(self.aulasono, (300, 100))
+                    # Renderiza o fundo do mapa
+                self.message_display('ninguém chegou ainda... acho que vou descansar... ZZzzzz', 450, 50)
+                calouroImg = self.calouroImg_costas
 
-                    calouroImg = self.calouroImg_costas
-                else:
+                if map2_elapsed_time > 5:
+                    # Exibe mensagem por 5 segundos no mapa 2
                     self.current_map = 3
+                    
+                    
+                #calouro(x, y, calouroImg)
+
+
             elif self.current_map == 3:
                 if map3_start_time is None:
                     map3_start_time = pygame.time.get_ticks()
@@ -114,24 +134,31 @@ class Jogo:
                     self.gameDisplay.blit(self.conjuntos, (0, 0))
                     x = 1000
                     y = 1000
-                elif map3_elapsed_time >= 5 and map3_elapsed_time <= 6:
+                elif map3_elapsed_time >= 5 and map3_elapsed_time < 5.1:
                 # Chama o método do mapa 3 após 8 segundos
                     Maps.mapa3_conjuntos()
                     x = 400 
                     y = 500
-                    calouroImg = self.calouroImg_frente
+                    
                 else:
                     Maps.mapa3_conjuntos()
+                    calouroImg = self.calouroImg_frente
+                    self.message_display('Se um conjunto A possui 1024 subconjuntos,', 400, 50)
+                    self.message_display('então o tamanho de A é igual a:', 400, 70)
+                    self.message_display('6', 155, 185)
+                    self.message_display('7', 280, 185)
+                    self.message_display('10', 505, 185)
+                    self.message_display('9', 630, 185)
 
-
-
+                    #self.pergunta1pequena = pygame.transform.scale(self.pergunta1pequena, (300, 100))
+                    #self.gameDisplay.blit(self.pergunta1pequena, (250, 0))
 
 
             # Processa eventos
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     GameExit = True
-                if self.current_map != 2 or (map2_start_time and map2_elapsed_time >= 8):
+                if self.current_map != 2 and self.current_map != 7:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_LEFT:
                             x_change = -3
@@ -153,7 +180,7 @@ class Jogo:
 
             # Verifica transições de mapa
             if self.current_map == 1:
-                if 350 <= x <= 400 and 555 <= y <= 600:
+                if 345 <= x <= 400 and 555 <= y <= 600:
                     self.current_map = 2  # Troca para o mapa 2
                     x, y = 327, 453  # Reinicia a posição
                     x_change = 0
@@ -172,7 +199,260 @@ class Jogo:
                 elif y > self.display_height - self.calouro_height:
                     y = self.display_height - self.calouro_height
                     self.warninglimitMapa1()
+            elif self.current_map == 3:
+                if 74 <= y < 185:
+                    if ( 106 <= x <= 166 ):
+                        Maps.gameover()
+                        pygame.display.update()  # Atualiza a tela para exibir o game over
+                        pygame.time.wait(3000)  # Aguarda 3 segundos para o jogador ver o estado
+                        # Reinicia no mapa "conjuntos"
+                        self.current_map = 3
+                        x, y = 400, 500  # Define as coordenadas iniciais para o mapa "conjuntos"
+                        x_change, y_change = 0, 0
+                    elif ( 232 <= x <= 300 ):
+                        Maps.gameover()
+                        pygame.display.update()  # Atualiza a tela para exibir o game over
+                        pygame.time.wait(3000)  # Aguarda 3 segundos para o jogador ver o estado
+                        # Reinicia no mapa "conjuntos"
+                        self.current_map = 3
+                        x, y = 400, 500  # Define as coordenadas iniciais para o mapa "conjuntos"
+                        x_change, y_change = 0, 0
+                    elif (454 <= x <= 514 ):
+                        Maps.mapa4_sequencias()
+                        self.current_map = 4  # Atribui corretamente o mapa 4
+                        x, y = 400, 500  # Define novas coordenadas iniciais para o mapa 4
+                        x_change, y_change = 0, 0
+                        pygame.display.update()
+                    elif (580 <= x <= 634 ):
+                        Maps.gameover()
+                        pygame.display.update()  # Atualiza a tela para exibir o game over
+                        pygame.time.wait(3000)  # Aguarda 3 segundos para o jogador ver o estado
+                        # Reinicia no mapa "conjuntos"
+                        self.current_map = 3
+                        x, y = 400, 500  # Define as coordenadas iniciais para o mapa "conjuntos"
+                        x_change, y_change = 0, 0
+                
+                if x < 0:
+                    x = 0
+                elif x > self.display_width - self.calouro_width:
+                    x = self.display_width - self.calouro_width
+                elif y < 0:
+                    y = 0
+                elif y > self.display_height - self.calouro_height:
+                    y = self.display_height - self.calouro_height
+            elif self.current_map == 4:
+                Maps.mapa4_sequencias()
+                if map4_start_time is None:
+                    map4_start_time = pygame.time.get_ticks()
+                map4_elapsed_time = (pygame.time.get_ticks() - map4_start_time) / 1000
+                if map4_elapsed_time < 5:
+                    self.gameDisplay.blit(self.pergunta3, (0, 0))
+                    x = 1000
+                    y = 1000
+                elif map4_elapsed_time >= 5 and map4_elapsed_time < 5.1:
+                # Chama o método do mapa 3 após 8 segundos
+                    Maps.mapa4_sequencias()
+                    x = 400 
+                    y = 500
+                
+                if 73 <= x <= 109 and 239 <= y <= 311:
+                    self.message_display('A Colega diz:', 400, 50)
+                    self.message_display('Tome cuidado com os veteranos frustrados e professores ruins', 400, 80)                 
+                else:
+                    Maps.mapa4_sequencias()
+                    calouroImg = self.calouroImg_frente
+                    self.message_display('Qual é a negação correta da proposição p→q?', 400, 50)
+                    self.message_display('p or ¬q', 175, 200)
+                    self.message_display('¬p or q', 300, 200)
+                    self.message_display('¬p and q', 525, 200)
+                    self.message_display('p and ¬q', 650, 200)
+ 
+                if (116 <= y <= 220):
+                    if ( 139 <= x <= 193 ):
+                        Maps.gameover()
+                        pygame.display.update()  # Atualiza a tela para exibir o game over
+                        pygame.time.wait(3000)  # Aguarda 3 segundos para o jogador ver o estado
+                        # Reinicia no mapa "conjuntos"
+                        self.current_map = 3
+                        x, y = 400, 500  # Define as coordenadas iniciais para o mapa "conjuntos"
+                        x_change, y_change = 0, 0
+                    elif ( 253 <= x <= 325 ):
+                        Maps.gameover()
+                        pygame.display.update()  # Atualiza a tela para exibir o game over
+                        pygame.time.wait(3000)  # Aguarda 3 segundos para o jogador ver o estado
+                        # Reinicia no mapa "conjuntos"
+                        self.current_map = 3
+                        x, y = 400, 500  # Define as coordenadas iniciais para o mapa "conjuntos"
+                        x_change, y_change = 0, 0
+                    elif (478 <= x <= 544 ):
+                        Maps.gameover()
+                        pygame.display.update()  # Atualiza a tela para exibir o game over
+                        pygame.time.wait(3000)  # Aguarda 3 segundos para o jogador ver o estado
+                        # Reinicia no mapa "conjuntos"
+                        self.current_map = 3
+                        x, y = 400, 500  # Define as coordenadas iniciais para o mapa "conjuntos"
+                        x_change, y_change = 0, 0
+                    elif (607 <= x <= 673 ):
+                        Maps.mapa5_logica()
+                        pygame.display.update()
+                        self.current_map = 5  # Atribui corretamente o mapa 4
+                        x, y = 400, 500  # Define novas coordenadas iniciais para o mapa 4
+                        x_change, y_change = 0, 0
+                if x < 0:
+                    x = 0
+                elif x > self.display_width - self.calouro_width:
+                    x = self.display_width - self.calouro_width
+                elif y < 0:
+                    y = 0
+                elif y > self.display_height - self.calouro_height:
+                    y = self.display_height - self.calouro_height
+                
+            elif self.current_map == 5:
+                Maps.mapa5_logica()
+                if map5_start_time is None:
+                    map5_start_time = pygame.time.get_ticks()
+                map5_elapsed_time = (pygame.time.get_ticks() - map5_start_time) / 1000
+                if map5_elapsed_time < 5:
+                    self.gameDisplay.blit(self.pergunta3, (0, 0))
+                    x = 1000
+                    y = 1000
+                elif map5_elapsed_time >= 5 and map5_elapsed_time < 5.1:
+                # Chama o método do mapa 3 após 8 segundos
+                    Maps.mapa5_logica()
+                    x = 400 
+                    y = 500
+                    
+                else:
+                    Maps.mapa5_logica()
+                    calouroImg = self.calouroImg_frente
+                    self.message_display('Existe algum y tal que para todo x(x^2>y)', 400, 50)
+                    self.message_display('Reais e inteiros', 185, 200, 10)
+                    self.message_display('Reais positivos', 305, 200, 10)
+                    self.message_display('Inteiros negativos', 535, 200, 10)
+                    self.message_display('Inteiros positivos', 660, 200, 10)
+                if (113 <= y <= 224):
+                    if ( 136 <= x <= 193 ):
+                        Maps.mapa6_inducao()
+                        pygame.display.update()
+                        self.current_map = 6  # Atribui corretamente o mapa 4
+                        x, y = 400, 500  # Define novas coordenadas iniciais para o mapa 4
+                        x_change, y_change = 0, 0
+                        
+                    elif ( 244 <= x <= 313 ):
+                        Maps.gameover()
+                        pygame.display.update()  # Atualiza a tela para exibir o game over
+                        pygame.time.wait(3000)  # Aguarda 3 segundos para o jogador ver o estado
+                        # Reinicia no mapa "conjuntos"
+                        self.current_map = 3
+                        x, y = 400, 500  # Define as coordenadas iniciais para o mapa "conjuntos"
+                        x_change, y_change = 0, 0
+                    elif (472 <= x <= 532 ):
+                        Maps.gameover()
+                        pygame.display.update()  # Atualiza a tela para exibir o game over
+                        pygame.time.wait(3000)  # Aguarda 3 segundos para o jogador ver o estado
+                        # Reinicia no mapa "conjuntos"
+                        self.current_map = 3
+                        x, y = 400, 500  # Define as coordenadas iniciais para o mapa "conjuntos"
+                        x_change, y_change = 0, 0
+                    elif (598 <= x <= 664 ):
+                        Maps.gameover()
+                        pygame.display.update()  # Atualiza a tela para exibir o game over
+                        pygame.time.wait(3000)  # Aguarda 3 segundos para o jogador ver o estado
+                        # Reinicia no mapa "conjuntos"
+                        self.current_map = 3
+                        x, y = 400, 500  # Define as coordenadas iniciais para o mapa "conjuntos"
+                        x_change, y_change = 0, 0
+                        
+                if x < 0:
+                    x = 0
+                elif x > self.display_width - self.calouro_width:
+                    x = self.display_width - self.calouro_width
+                elif y < 0:
+                    y = 0
+                elif y > self.display_height - self.calouro_height:
+                    y = self.display_height - self.calouro_height
+            elif self.current_map == 6:
+                Maps.mapa6_inducao()
+                if map6_start_time is None:
+                    map6_start_time = pygame.time.get_ticks()
+                map6_elapsed_time = (pygame.time.get_ticks() - map6_start_time) / 1000
+                if map6_elapsed_time < 5:
+                    self.gameDisplay.blit(self.pergunta4, (0, 0))
+                    x = 1000
+                    y = 1000
+                elif map6_elapsed_time >= 5 and map6_elapsed_time < 5.1:
+                # Chama o método do mapa 3 após 8 segundos
+                    Maps.mapa6_inducao()
+                    x = 400 
+                    y = 500
+                    
+                else:
+                    Maps.mapa5_logica()
+                    calouroImg = self.calouroImg_frente
+                    self.message_display('Para m um inteiro positivo, 4m+2 é múltiplo de', 400, 70)
+                    self.message_display('6', 175, 200)
+                    self.message_display('2', 300, 200)
+                    self.message_display('3', 525, 200)
+                    self.message_display('5', 650, 200)
+                if (113 <= y <= 224):
+                    if ( 136 <= x <= 193 ):
+                        Maps.gameover()
+                        pygame.display.update()  # Atualiza a tela para exibir o game over
+                        pygame.time.wait(3000)  # Aguarda 3 segundos para o jogador ver o estado
+                        # Reinicia no mapa "conjuntos"
+                        self.current_map = 3
+                        x, y = 400, 500  # Define as coordenadas iniciais para o mapa "conjuntos"
+                        x_change, y_change = 0, 0
+                        
+                    elif ( 244 <= x <= 313 ):
+                        
+                        Maps.mapa2()
+                        pygame.display.update()
+                        self.current_map = 7  # Atribui corretamente o mapa 4
+                        x, y = 400, 500  # Define novas coordenadas iniciais para o mapa 4
+                        x_change, y_change = 0, 0
+                    elif (472 <= x <= 532 ):
+                        Maps.gameover()
+                        pygame.display.update()  # Atualiza a tela para exibir o game over
+                        pygame.time.wait(3000)  # Aguarda 3 segundos para o jogador ver o estado
+                        # Reinicia no mapa "conjuntos"
+                        self.current_map = 3
+                        x, y = 400, 500  # Define as coordenadas iniciais para o mapa "conjuntos"
+                        x_change, y_change = 0, 0
+                    elif (598 <= x <= 664 ):
+                        Maps.gameover()
+                        pygame.display.update()  # Atualiza a tela para exibir o game over
+                        pygame.time.wait(3000)  # Aguarda 3 segundos para o jogador ver o estado
+                        # Reinicia no mapa "conjuntos"
+                        self.current_map = 3
+                        x, y = 400, 500  # Define as coordenadas iniciais para o mapa "conjuntos"
+                        x_change, y_change = 0, 0
+                if x < 0:
+                    x = 0
+                elif x > self.display_width - self.calouro_width:
+                    x = self.display_width - self.calouro_width
+                elif y < 0:
+                    y = 0
+                elif y > self.display_height - self.calouro_height:
+                    y = self.display_height - self.calouro_height
+            elif self.current_map == 7:
+                if map7_start_time is None:
+                    map7_start_time = pygame.time.get_ticks()
+                map7_elapsed_time = (pygame.time.get_ticks() - map7_start_time) / 1000
 
+                if map7_elapsed_time > 5:
+                    # Exibe a imagem no mapa 3
+                    self.gameDisplay.fill((0, 0, 0))  # Preenche a tela com a cor preta
+                    self.message_display_white('Obrigada por jogar!', 400, 300)
+                    self.message_display_white('FIM', 400, 350)
+                    x, y = 1000, 10000 
+
+                else:
+                    Maps.mapa2()
+                    calouroImg = self.calouroImg_costas
+                    self.message_display('EU GANHEI O QUIZ! Mas todo mundo já foi embora...', 450, 50)
+                    self.message_display('ainda perdi o chocolate por dormir demais... espero que eu vá bem amanhã...', 400, 70)
+                
             if self.elapsed_time >= 10:  
                 calouro(x, y, calouroImg)
                 self.mostrar_coordenadas(self.gameDisplay, x, y)

@@ -37,11 +37,9 @@ class Mapa:
         self.background = pygame.image.load(os.path.join('assets', 'gameoverset.png'))
         self.gameDisplay.blit(self.background, (0, 0))
     def intro(self):
-        """Desenha apenas o fundo do mapa 2."""
-
-        
+        """Desenha apenas o fundo do mapa 2."""        
         self.gameDisplay.blit(self.background, (0, 0))
-
+    
 '''
     def textoSalaInicio(self):
         """Desenha apenas o fundo do mapa 2."""
