@@ -1,6 +1,8 @@
 import pygame
 import os
 from mapa import *
+import time 
+import math
 
 class Jogo:
     def __init__(self):
@@ -34,13 +36,50 @@ class Jogo:
         self.logica = pygame.image.load(os.path.join('assets', 'pergunta2.png'))
         self.pergunta3 = pygame.image.load(os.path.join('assets', 'pergunta3.png'))
         self.pergunta4 = pygame.image.load(os.path.join('assets', 'pergunta4.png'))
+        self.perseguidor2_img = pygame.image.load(os.path.join('assets', 'perseguidor2.png'))
+        self.perseguidor1_img = pygame.image.load(os.path.join('assets', 'perseguidor1.png'))
+        self.perseguidor1_img = pygame.transform.scale(self.perseguidor1_img, (50, 50)) 
+        self.perseguidor2_img = pygame.transform.scale(self.perseguidor2_img, (50, 50)) 
 
+
+    def perseguir_calouro(self, perseguidores, calouro_pos, velocidade):
+        """
+        Faz os perseguidores perseguirem o calouro.
+        :param perseguidores: Lista de dicionários com posição {'x': valor, 'y': valor}.
+        :param calouro_pos: Dicionário com a posição atual do calouro {'x': valor, 'y': valor}.
+        :param velocidade: Velocidade dos perseguidores.
+        :param gameover: Função a ser chamada caso um perseguidor alcance o calouro.
+        """
+
+        for perseguidor in perseguidores:
+            # Calcula a diferença de posição entre perseguidor e calouro
+            dx = calouro_pos['x'] - perseguidor['x']
+            dy = calouro_pos['y'] - perseguidor['y']
+
+            # Calcula a distância atual entre eles
+            distancia = math.sqrt(dx**2 + dy**2)
+
+            # Verifica se o perseguidor alcançou o calouro
+            if distancia < 30:  # Tamanho do raio de colisão
+                Maps = Mapa(self.gameDisplay)
+                Maps.gameover()  # Chama a função gameover
+                self.current_map = 3
+                perseguidores = [{'x': 100, 'y': 100}, {'x': 700, 'y': 500}]
+
+                
+                return
+
+            # Atualiza a posição do perseguidor para se aproximar do calouro
+            perseguidor['x'] += velocidade * (dx / distancia)
+            perseguidor['y'] += velocidade * (dy / distancia)
+
+    '''
     def mostrar_coordenadas(self, display, x, y):
         """Exibe as coordenadas do personagem na tela."""
         font = pygame.font.Font(None, 36)
         text = font.render(f"X: {x}, Y: {y}", True, self.black)
         display.blit(text, (10, 10))
-
+    '''
     def text_objects(self, text, font):
         """Função auxiliar para renderizar texto."""
         textSurface = font.render(text, True, self.black)
@@ -88,8 +127,10 @@ class Jogo:
         map5_start_time = None
         map6_start_time = None
         map7_start_time = None
+        perseguidores = [{'x': 100, 'y': 100}, {'x': 700, 'y': 500}]
 
         while not GameExit:
+
             # Calcula o tempo total decorrido
             self.elapsed_time = (pygame.time.get_ticks() - self.start_time) / 1000
 
@@ -218,11 +259,18 @@ class Jogo:
                         x, y = 400, 500  # Define as coordenadas iniciais para o mapa "conjuntos"
                         x_change, y_change = 0, 0
                     elif (454 <= x <= 514 ):
-                        Maps.mapa4_sequencias()
+                        # Exibe a imagem
+                        self.gameDisplay.blit(self.logica, (0, 0))
+                        pygame.display.update()  # Atualiza a tela para mostrar a imagem
+                        
+                        pygame.time.wait(5000)  # Aguarda 5 segundos (5000 milissegundos)
+                        
+                        # Continua com as alterações do jogo
                         self.current_map = 4  # Atribui corretamente o mapa 4
                         x, y = 400, 500  # Define novas coordenadas iniciais para o mapa 4
                         x_change, y_change = 0, 0
                         pygame.display.update()
+
                     elif (580 <= x <= 634 ):
                         Maps.gameover()
                         pygame.display.update()  # Atualiza a tela para exibir o game over
@@ -242,24 +290,12 @@ class Jogo:
                     y = self.display_height - self.calouro_height
             elif self.current_map == 4:
                 Maps.mapa4_sequencias()
-                if map4_start_time is None:
-                    map4_start_time = pygame.time.get_ticks()
-                map4_elapsed_time = (pygame.time.get_ticks() - map4_start_time) / 1000
-                if map4_elapsed_time < 5:
-                    self.gameDisplay.blit(self.pergunta3, (0, 0))
-                    x = 1000
-                    y = 1000
-                elif map4_elapsed_time >= 5 and map4_elapsed_time < 5.1:
-                # Chama o método do mapa 3 após 8 segundos
-                    Maps.mapa4_sequencias()
-                    x = 400 
-                    y = 500
-                
+                    
                 if 73 <= x <= 109 and 239 <= y <= 311:
                     self.message_display('A Colega diz:', 400, 50)
                     self.message_display('Tome cuidado com os veteranos frustrados e professores ruins', 400, 80)                 
                 else:
-                    Maps.mapa4_sequencias()
+                    #Maps.mapa4_sequencias()
                     calouroImg = self.calouroImg_frente
                     self.message_display('Qual é a negação correta da proposição p→q?', 400, 50)
                     self.message_display('p or ¬q', 175, 200)
@@ -325,11 +361,17 @@ class Jogo:
                 else:
                     Maps.mapa5_logica()
                     calouroImg = self.calouroImg_frente
+                    calouro_pos = {'x': x, 'y': y}
                     self.message_display('Existe algum y tal que para todo x(x^2>y)', 400, 50)
                     self.message_display('Reais e inteiros', 185, 200, 10)
                     self.message_display('Reais positivos', 305, 200, 10)
                     self.message_display('Inteiros negativos', 535, 200, 10)
                     self.message_display('Inteiros positivos', 660, 200, 10)
+                    self.perseguir_calouro(perseguidores, calouro_pos, 2)
+                    for perseguidor in perseguidores:
+                        self.gameDisplay.blit(self.perseguidor1_img, (perseguidor['x'], perseguidor['y']))
+
+
                 if (113 <= y <= 224):
                     if ( 136 <= x <= 193 ):
                         Maps.mapa6_inducao()
@@ -394,6 +436,7 @@ class Jogo:
                     self.message_display('2', 300, 200)
                     self.message_display('3', 525, 200)
                     self.message_display('5', 650, 200)
+                    
                 if (113 <= y <= 224):
                     if ( 136 <= x <= 193 ):
                         Maps.gameover()
@@ -455,7 +498,7 @@ class Jogo:
                 
             if self.elapsed_time >= 10:  
                 calouro(x, y, calouroImg)
-                self.mostrar_coordenadas(self.gameDisplay, x, y)
+                #self.mostrar_coordenadas(self.gameDisplay, x, y)
             # Atualiza o display e controla o FPS
             pygame.display.update()
             self.clock.tick(60)
